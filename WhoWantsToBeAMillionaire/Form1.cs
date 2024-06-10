@@ -32,6 +32,7 @@ namespace WhoWantsToBeAMillionaire
             btnAnswerD.Text = q.Answers[3];
         }
 
+        // Метод для получения вопроса соответсвующего уровня сложности из базы данных
         private Question GetQuestion(int level)
         {
             SQLiteConnection cn = new SQLiteConnection();
