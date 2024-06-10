@@ -22,6 +22,7 @@ namespace WhoWantsToBeAMillionaire
             startGame();
         }
 
+        // Метод для отображения в форме вопроса и вариантов ответов
         private void ShowQuestion(Question q)
         {
             lblQuestion.Text = q.Text;
