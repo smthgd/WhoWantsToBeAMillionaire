@@ -13,7 +13,6 @@ namespace WhoWantsToBeAMillionaire
         private string playerName;
         private bool isErrorMargin = false;
 
-        private Random rnd = new Random();
         private static Random random = new Random();
         private Question currentQuestion;
         private SoundPlayer soundPlayer;
@@ -272,7 +271,7 @@ namespace WhoWantsToBeAMillionaire
 
             while (count < 2)
             {
-                int n = rnd.Next(4);
+                int n = random.Next(4);
                 int answer = int.Parse(btns[n].Tag.ToString());
 
                 if (answer != currentQuestion.RightAnswer && btns[n].Enabled)
