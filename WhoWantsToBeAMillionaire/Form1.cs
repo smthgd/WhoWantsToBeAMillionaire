@@ -7,19 +7,58 @@ namespace WhoWantsToBeAMillionaire
 {
     public partial class Form1 : Form
     {
-        List<Question> questions = new List<Question>();
+        private List<Question> questions = new List<Question>();
+
+        private int level = 0;
+        private string playerName;
+        private bool isErrorMargin = false;
+
         private Random rnd = new Random();
-        int level = 0;
-        Question currentQuestion;
-        bool isErrorMargin = false;
-        static Random random = new Random();
-        string playerName;
+        private static Random random = new Random();
+        private Question currentQuestion;
         private SoundPlayer soundPlayer;
+
+        private WMPLib.WindowsMediaPlayer rightAnsSound;
+        private WMPLib.WindowsMediaPlayer wrongAnsSound;
+        private WMPLib.WindowsMediaPlayer fiftyFiftyHint;
+
+        private WMPLib.WindowsMediaPlayer RightAnsSound 
+        {  
+            get 
+            {
+                rightAnsSound = new WMPLib.WindowsMediaPlayer();
+                rightAnsSound.URL = "khsm_q1-5-correct-o.mp3";
+
+                return rightAnsSound; 
+            }
+        }
+
+        private WMPLib.WindowsMediaPlayer WrongAnsSound
+        {
+            get
+            {
+                wrongAnsSound = new WMPLib.WindowsMediaPlayer();
+                wrongAnsSound.URL = "khsm_q1-5-wrong.mp3";
+
+                return wrongAnsSound;
+            }
+        }
+
+        private WMPLib.WindowsMediaPlayer FiftyFiftyHint
+        {
+            get
+            {
+                fiftyFiftyHint = new WMPLib.WindowsMediaPlayer();
+                fiftyFiftyHint.URL = "khsm_50-50.mp3";
+
+                return fiftyFiftyHint;
+            }
+        }
 
         public Form1()
         {
             InitializeComponent();
-            startGame();
+            StartGame();
         }
 
         // Метод для отображения в форме вопроса и вариантов ответов
@@ -35,27 +74,27 @@ namespace WhoWantsToBeAMillionaire
         // Метод для получения вопроса соответсвующего уровня сложности из базы данных
         private Question GetQuestion(int level)
         {
-            SQLiteConnection cn = new SQLiteConnection();
-            cn.ConnectionString = ConfigurationManager.ConnectionStrings["questions"].ConnectionString;
-            cn.Open();
+            SQLiteConnection connection = new SQLiteConnection();
+            connection.ConnectionString = ConfigurationManager.ConnectionStrings["questions"].ConnectionString;
+            connection.Open();
 
-            var cmd = new SQLiteCommand($@"select * from Questions WHERE Level={level} order by Random() LIMIT 1", cn);
+            var command = new SQLiteCommand($@"select * from Questions WHERE Level={level} order by Random() LIMIT 1", connection);
 
-            var dr = cmd.ExecuteReader();
-            dr.Read();
-            Question q = new Question(dr);
+            var dataReader = command.ExecuteReader();
+            dataReader.Read();
+            Question question = new Question(dataReader);
 
-            return q;
+            return question;
         }
 
-
+        // Метод для перехода на следующий этап игры
         private void NextStep()
         {
-            Button[] btns = new Button[] { btnAnswerA, btnAnswerB, btnAnswerC, btnAnswerC };
+            Button[] buttons = new Button[] { btnAnswerA, btnAnswerB, btnAnswerC, btnAnswerC };
 
-            foreach (Button btn in btns)
+            foreach (Button button in buttons)
             {
-                btn.Enabled = true;
+                button.Enabled = true;
             }
 
             level++;
@@ -65,20 +104,25 @@ namespace WhoWantsToBeAMillionaire
             panel1.Controls.Clear();
         }
 
-        private void startGame()
+        // Метод для начала игры
+        private void StartGame()
         {
             WMPLib.WindowsMediaPlayer soundPlayer = new WMPLib.WindowsMediaPlayer();
             soundPlayer.URL = "hello-new-punter-2008-long.mp3";
             soundPlayer.controls.play();
-            btnFiftyFifty.Enabled = true;
-            btnFriendCall.Enabled = true;
-            btnQuestionReplace.Enabled = true;
-            btnErrorMargin.Enabled = true;
-            btnAudienceHelp.Enabled = true;
+
+            Button[] hintButtons = new Button[] { btnFiftyFifty, btnFriendCall, btnQuestionReplace, btnErrorMargin, btnAudienceHelp };
+
+            foreach (Button button in hintButtons)
+            {
+                button.Enabled = true;
+            }
 
             level = 0;
+
             HintsForm hints = new HintsForm();
             ScoresForm enterNameForm = new ScoresForm();
+
             NextStep();
             enterNameForm.ShowDialog();
             hints.ShowDialog();
@@ -118,25 +162,20 @@ namespace WhoWantsToBeAMillionaire
         private void btnAnswerA_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            WMPLib.WindowsMediaPlayer rightAnsSound = new WMPLib.WindowsMediaPlayer();
-            rightAnsSound.URL = "khsm_q1-5-correct-o.mp3";
-
-            WMPLib.WindowsMediaPlayer wrongAnsSound = new WMPLib.WindowsMediaPlayer();
-            wrongAnsSound.URL = "khsm_q1-5-wrong.mp3";
 
             if (currentQuestion.RightAnswer == int.Parse(button.Tag.ToString()))
             {
-                rightAnsSound.controls.play();
+                RightAnsSound.controls.play();
                 NextStep();
             }
             else
             {
                 if (!isErrorMargin)
                 {
-                    wrongAnsSound.controls.play();
+                    WrongAnsSound.controls.play();
                     MessageBox.Show("Неверный ответ!");
                     SaveResultToDatabase(playerName,level);
-                    startGame();
+                    StartGame();
                 }
                 else
                 {
@@ -149,25 +188,20 @@ namespace WhoWantsToBeAMillionaire
         private void btnAnswerB_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            WMPLib.WindowsMediaPlayer rightAnsSound = new WMPLib.WindowsMediaPlayer();
-            rightAnsSound.URL = "khsm_q1-5-correct-o.mp3";
-
-            WMPLib.WindowsMediaPlayer wrongAnsSound = new WMPLib.WindowsMediaPlayer();
-            wrongAnsSound.URL = "khsm_q1-5-wrong.mp3";
 
             if (currentQuestion.RightAnswer == int.Parse(button.Tag.ToString()))
             {
-                rightAnsSound.controls.play();
+                RightAnsSound.controls.play();
                 NextStep();
             }
             else
             {
                 if (!isErrorMargin)
                 {
-                    wrongAnsSound.controls.play();
+                    WrongAnsSound.controls.play();
                     MessageBox.Show("Неверный ответ!");
                     SaveResultToDatabase(playerName, level);
-                    startGame();
+                    StartGame();
                 }
                 else
                 {
@@ -180,25 +214,20 @@ namespace WhoWantsToBeAMillionaire
         private void btnAnswerC_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            WMPLib.WindowsMediaPlayer rightAnsSound = new WMPLib.WindowsMediaPlayer();
-            rightAnsSound.URL = "khsm_q1-5-correct-o.mp3";
-
-            WMPLib.WindowsMediaPlayer wrongAnsSound = new WMPLib.WindowsMediaPlayer();
-            wrongAnsSound.URL = "khsm_q1-5-wrong.mp3";
 
             if (currentQuestion.RightAnswer == int.Parse(button.Tag.ToString()))
             {
-                rightAnsSound.controls.play();
+                RightAnsSound.controls.play();
                 NextStep();
             }
             else
             {
                 if (!isErrorMargin)
                 {
-                    wrongAnsSound.controls.play();
+                    WrongAnsSound.controls.play();
                     MessageBox.Show("Неверный ответ!");
                     SaveResultToDatabase(playerName, level);
-                    startGame();
+                    StartGame();
                 }
                 else
                 {
@@ -211,25 +240,20 @@ namespace WhoWantsToBeAMillionaire
         private void btnAnswerD_Click(object sender, EventArgs e)
         {
             Button button = (Button)sender;
-            WMPLib.WindowsMediaPlayer rightAnsSound = new WMPLib.WindowsMediaPlayer();
-            rightAnsSound.URL = "khsm_q1-5-correct-o.mp3";
-
-            WMPLib.WindowsMediaPlayer wrongAnsSound = new WMPLib.WindowsMediaPlayer();
-            wrongAnsSound.URL = "khsm_q1-5-wrong.mp3";
 
             if (currentQuestion.RightAnswer == int.Parse(button.Tag.ToString()))
             {
-                rightAnsSound.controls.play();
+                RightAnsSound.controls.play();
                 NextStep();
             }
             else
             {
                 if (!isErrorMargin)
                 {
-                    wrongAnsSound.controls.play();
+                    WrongAnsSound.controls.play();
                     MessageBox.Show("Неверный ответ!");
                     SaveResultToDatabase(playerName,level);
-                    startGame();
+                    StartGame();
                 }
                 else
                 {
@@ -243,9 +267,7 @@ namespace WhoWantsToBeAMillionaire
         {
             Button[] btns = new Button[] { btnAnswerA, btnAnswerB, btnAnswerC, btnAnswerC };
 
-            WMPLib.WindowsMediaPlayer soundPlayer = new WMPLib.WindowsMediaPlayer();
-            soundPlayer.URL = "khsm_50-50.mp3";
-            soundPlayer.controls.play();
+            FiftyFiftyHint.controls.play();
             int count = 0;
 
             while (count < 2)
@@ -275,7 +297,7 @@ namespace WhoWantsToBeAMillionaire
             friendCallForm.ShowDialog();
 
             string phoneNumber = friendCallForm.PhoneNumber;
-            int friendAnswerNumber = random.Next(1,5);
+            int friendAnswerNumber = random.Next(1,5); // Друг отвечает не обязательно правильно. Выбирается случайный ответ
             string friendAnswerText = "";
 
             if (phoneNumber != null && phoneNumber != "")
@@ -313,13 +335,13 @@ namespace WhoWantsToBeAMillionaire
 
         private void btnAudienceHelp_Click(object sender, EventArgs e)
         {
-            System.Windows.Forms.DataVisualization.Charting.Chart pieChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            Chart pieChart = new Chart();
             pieChart.Dock = DockStyle.Fill;
             pieChart.Legends.Add("Legend");
             pieChart.ChartAreas.Add("ChartArea1");
-            int percentLeft = 0;
-            List<int> numbers = new List<int>();
 
+            List<int> numbers = new List<int>();
+            int percentLeft = 0;
 
             for (int i = 0; i < 3; i++)
             {
@@ -332,24 +354,25 @@ namespace WhoWantsToBeAMillionaire
             pieChart.Series.Add("Series1");
 
             // Добавить данные в круговую диаграмму
+            // Зал отвечает не обязательно верно. Данные генерируются случайно
             foreach (int number in numbers)
             {
                 pieChart.Series["Series1"].Points.AddXY(number, number);
             }
 
             string[] legendLabels = { btnAnswerA.Text, btnAnswerB.Text, btnAnswerC.Text, btnAnswerD.Text };
+
             for (int i = 0; i < pieChart.Series["Series1"].Points.Count; i++)
             {
                 pieChart.Series["Series1"].Points[i].LegendText = legendLabels[i];
             }
 
-            // Установить свойства диаграммы
+            // Устанавливаем свойства диаграммы
             pieChart.Series["Series1"].ChartType = SeriesChartType.Pie;
             pieChart.Series["Series1"].LegendText = "#VALY";
             pieChart.Series["Series1"].Label = "#VALY%";
             pieChart.Legends["Legend"].Docking = Docking.Bottom;
 
-            // Добавить диаграмму на панель
             panel1.Controls.Add(pieChart);
             btnAudienceHelp.Enabled = false;
         }
@@ -361,30 +384,33 @@ namespace WhoWantsToBeAMillionaire
             this.btnQuestionReplace.Enabled = false;
         }
 
+        // Метод для сохранения данных в базу данных
         private void SaveResultToDatabase(string playerName, int level)
         {
-            using (SQLiteConnection cn = new SQLiteConnection(ConfigurationManager.ConnectionStrings["rating"].ConnectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["rating"].ConnectionString))
             {
-                cn.Open();
+                connection.Open();
 
                 // Проверяем, существует ли игрок с таким именем уже в базе данных
                 string selectQuery = "SELECT * FROM Rating WHERE Name = @Name";
 
-                using (SQLiteCommand selectCmd = new SQLiteCommand(selectQuery, cn))
+                using (SQLiteCommand selectCommand = new SQLiteCommand(selectQuery, connection))
                 {
-                    selectCmd.Parameters.AddWithValue("@Name", playerName);
+                    selectCommand.Parameters.AddWithValue("@Name", playerName);
 
                     // Выполняем запрос
-                    using (SQLiteDataReader reader = selectCmd.ExecuteReader())
+                    using (SQLiteDataReader reader = selectCommand.ExecuteReader())
                     {
                         if (reader.Read()) // Если игрок найден
                         {
                             // Обновляем его уровень
                             int existingLevel = reader.GetInt32(reader.GetOrdinal("Level"));
+
                             if (level > existingLevel)
                             {
                                 string updateQuery = "UPDATE Rating SET Level = @Level WHERE Name = @Name";
-                                using (SQLiteCommand updateCmd = new SQLiteCommand(updateQuery, cn))
+
+                                using (SQLiteCommand updateCmd = new SQLiteCommand(updateQuery, connection))
                                 {
                                     updateCmd.Parameters.AddWithValue("@Level", level);
                                     updateCmd.Parameters.AddWithValue("@Name", playerName);
@@ -395,7 +421,8 @@ namespace WhoWantsToBeAMillionaire
                         else // Если игрок не найден, добавляем новую запись
                         {
                             string insertQuery = "INSERT INTO Rating (Name, Level) VALUES (@Name, @Level)";
-                            using (SQLiteCommand insertCmd = new SQLiteCommand(insertQuery, cn))
+
+                            using (SQLiteCommand insertCmd = new SQLiteCommand(insertQuery, connection))
                             {
                                 insertCmd.Parameters.AddWithValue("@Name", playerName);
                                 insertCmd.Parameters.AddWithValue("@Level", level);
@@ -406,22 +433,22 @@ namespace WhoWantsToBeAMillionaire
                 }
             }
         }
+
+        // Метод для загрузки топа игроков
         private void LoadTopPlayers()
         {
-            // Подключение к базе данных SQLite
-            using (SQLiteConnection cn = new SQLiteConnection(ConfigurationManager.ConnectionStrings["rating"].ConnectionString))
+            using (SQLiteConnection connection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["rating"].ConnectionString))
             {
-                cn.Open();
+                connection.Open();
 
                 // Создание SQL-запроса для выборки топ-10 игроков
-                string sql = "SELECT Name, Level FROM Rating ORDER BY Level DESC LIMIT 10";
+                string selectQuery = "SELECT Name, Level FROM Rating ORDER BY Level DESC LIMIT 10";
 
-                using (SQLiteCommand cmd = new SQLiteCommand(sql, cn))
+                using (SQLiteCommand command = new SQLiteCommand(selectQuery, connection))
                 {
                     // Выполнение SQL-запроса и получение результатов
-                    using (SQLiteDataReader dr = cmd.ExecuteReader())
+                    using (SQLiteDataReader dr = command.ExecuteReader())
                     {
-                        // Очистка списка топ-10 игроков
                         topPlayersListBox.Items.Clear();
 
                         // Отображение результатов на форме
@@ -430,7 +457,6 @@ namespace WhoWantsToBeAMillionaire
                             string playerName = dr.GetString(0);
                             int level = dr.GetInt32(1);
 
-                            // Отображение имени игрока и его уровня в списке топ-10
                             topPlayersListBox.Items.Add($"{playerName} - Уровень {level}");
                         }
                     }

@@ -77,6 +77,7 @@
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            // Проверяем, что выбрано нужное количество подсказок, а именно 3 из 5
             if (hints.Count == 2)
             {
                 Hints = hints;

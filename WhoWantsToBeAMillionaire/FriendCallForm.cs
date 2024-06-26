@@ -2,14 +2,14 @@
 {
     public partial class FriendCallForm : Form
     {
+        private bool isValid = false;
+        private int secondsLeft = 30;
+
         public string PhoneNumber
         {
             get { return txtFriendNumber.Text; }
             set { txtFriendNumber.Text = value; }
         }
-
-        private bool isValid = false;
-        private int secondsLeft = 30;
 
         public FriendCallForm()
         {
@@ -20,6 +20,7 @@
         {
             isValid = System.Text.RegularExpressions.Regex.IsMatch(txtFriendNumber.Text, @"(\+7|8)9\d{9}");
 
+            // Проверяем подходит ли телефон маске
             if (isValid)
             {
                 MessageBox.Show("Спасибо! Номер телефона принят: " + txtFriendNumber.Text);
