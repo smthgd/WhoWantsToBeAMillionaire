@@ -1,4 +1,4 @@
-using System.Data.SQLite;
+п»їusing System.Data.SQLite;
 using System.Media;
 using System.Windows.Forms.DataVisualization.Charting;
 using System.Configuration;
@@ -61,7 +61,7 @@ namespace WhoWantsToBeAMillionaire
             StartGame();
         }
 
-        // Метод для отображения в форме вопроса и вариантов ответов
+        // РњРµС‚РѕРґ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РІ С„РѕСЂРјРµ РІРѕРїСЂРѕСЃР° Рё РІР°СЂРёР°РЅС‚РѕРІ РѕС‚РІРµС‚РѕРІ
         private void ShowQuestion(Question q)
         {
             lblQuestion.Text = q.Text;
@@ -71,7 +71,7 @@ namespace WhoWantsToBeAMillionaire
             btnAnswerD.Text = q.Answers[3];
         }
 
-        // Метод для получения вопроса соответсвующего уровня сложности из базы данных
+        // РњРµС‚РѕРґ РґР»СЏ РїРѕР»СѓС‡РµРЅРёСЏ РІРѕРїСЂРѕСЃР° СЃРѕРѕС‚РІРµС‚СЃРІСѓСЋС‰РµРіРѕ СѓСЂРѕРІРЅСЏ СЃР»РѕР¶РЅРѕСЃС‚Рё РёР· Р±Р°Р·С‹ РґР°РЅРЅС‹С…
         private Question GetQuestion(int level)
         {
             SQLiteConnection connection = new SQLiteConnection();
@@ -87,7 +87,7 @@ namespace WhoWantsToBeAMillionaire
             return question;
         }
 
-        // Метод для перехода на следующий этап игры
+        // РњРµС‚РѕРґ РґР»СЏ РїРµСЂРµС…РѕРґР° РЅР° СЃР»РµРґСѓСЋС‰РёР№ СЌС‚Р°Рї РёРіСЂС‹
         private void NextStep()
         {
             Button[] buttons = new Button[] { btnAnswerA, btnAnswerB, btnAnswerC, btnAnswerC };
@@ -104,7 +104,7 @@ namespace WhoWantsToBeAMillionaire
             panel1.Controls.Clear();
         }
 
-        // Метод для начала игры
+        // РњРµС‚РѕРґ РґР»СЏ РЅР°С‡Р°Р»Р° РёРіСЂС‹
         private void StartGame()
         {
             WMPLib.WindowsMediaPlayer soundPlayer = new WMPLib.WindowsMediaPlayer();
@@ -173,7 +173,7 @@ namespace WhoWantsToBeAMillionaire
                 if (!isErrorMargin)
                 {
                     WrongAnsSound.controls.play();
-                    MessageBox.Show("Неверный ответ!");
+                    MessageBox.Show("РќРµРІРµСЂРЅС‹Р№ РѕС‚РІРµС‚!");
                     SaveResultToDatabase(playerName,level);
                     StartGame();
                 }
@@ -199,7 +199,7 @@ namespace WhoWantsToBeAMillionaire
                 if (!isErrorMargin)
                 {
                     WrongAnsSound.controls.play();
-                    MessageBox.Show("Неверный ответ!");
+                    MessageBox.Show("РќРµРІРµСЂРЅС‹Р№ РѕС‚РІРµС‚!");
                     SaveResultToDatabase(playerName, level);
                     StartGame();
                 }
@@ -225,7 +225,7 @@ namespace WhoWantsToBeAMillionaire
                 if (!isErrorMargin)
                 {
                     WrongAnsSound.controls.play();
-                    MessageBox.Show("Неверный ответ!");
+                    MessageBox.Show("РќРµРІРµСЂРЅС‹Р№ РѕС‚РІРµС‚!");
                     SaveResultToDatabase(playerName, level);
                     StartGame();
                 }
@@ -251,7 +251,7 @@ namespace WhoWantsToBeAMillionaire
                 if (!isErrorMargin)
                 {
                     WrongAnsSound.controls.play();
-                    MessageBox.Show("Неверный ответ!");
+                    MessageBox.Show("РќРµРІРµСЂРЅС‹Р№ РѕС‚РІРµС‚!");
                     SaveResultToDatabase(playerName,level);
                     StartGame();
                 }
@@ -297,7 +297,7 @@ namespace WhoWantsToBeAMillionaire
             friendCallForm.ShowDialog();
 
             string phoneNumber = friendCallForm.PhoneNumber;
-            int friendAnswerNumber = random.Next(1,5); // Друг отвечает не обязательно правильно. Выбирается случайный ответ
+            int friendAnswerNumber = random.Next(1,5); // Р”СЂСѓРі РѕС‚РІРµС‡Р°РµС‚ РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РїСЂР°РІРёР»СЊРЅРѕ. Р’С‹Р±РёСЂР°РµС‚СЃСЏ СЃР»СѓС‡Р°Р№РЅС‹Р№ РѕС‚РІРµС‚
             string friendAnswerText = "";
 
             if (phoneNumber != null && phoneNumber != "")
@@ -321,7 +321,7 @@ namespace WhoWantsToBeAMillionaire
                         break;
                 }
 
-                MessageBox.Show("Ваш друг, считает, что верный ответ: " + friendAnswerText);
+                MessageBox.Show("Р’Р°С€ РґСЂСѓРі, СЃС‡РёС‚Р°РµС‚, С‡С‚Рѕ РІРµСЂРЅС‹Р№ РѕС‚РІРµС‚: " + friendAnswerText);
             }
 
             btnFriendCall.Enabled = false;
@@ -353,8 +353,8 @@ namespace WhoWantsToBeAMillionaire
             numbers.Add(100 - percentLeft);
             pieChart.Series.Add("Series1");
 
-            // Добавить данные в круговую диаграмму
-            // Зал отвечает не обязательно верно. Данные генерируются случайно
+            // Р”РѕР±Р°РІРёС‚СЊ РґР°РЅРЅС‹Рµ РІ РєСЂСѓРіРѕРІСѓСЋ РґРёР°РіСЂР°РјРјСѓ
+            // Р—Р°Р» РѕС‚РІРµС‡Р°РµС‚ РЅРµ РѕР±СЏР·Р°С‚РµР»СЊРЅРѕ РІРµСЂРЅРѕ. Р”Р°РЅРЅС‹Рµ РіРµРЅРµСЂРёСЂСѓСЋС‚СЃСЏ СЃР»СѓС‡Р°Р№РЅРѕ
             foreach (int number in numbers)
             {
                 pieChart.Series["Series1"].Points.AddXY(number, number);
@@ -367,7 +367,7 @@ namespace WhoWantsToBeAMillionaire
                 pieChart.Series["Series1"].Points[i].LegendText = legendLabels[i];
             }
 
-            // Устанавливаем свойства диаграммы
+            // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃРІРѕР№СЃС‚РІР° РґРёР°РіСЂР°РјРјС‹
             pieChart.Series["Series1"].ChartType = SeriesChartType.Pie;
             pieChart.Series["Series1"].LegendText = "#VALY";
             pieChart.Series["Series1"].Label = "#VALY%";
@@ -384,26 +384,26 @@ namespace WhoWantsToBeAMillionaire
             this.btnQuestionReplace.Enabled = false;
         }
 
-        // Метод для сохранения данных в базу данных
+        // РњРµС‚РѕРґ РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С… РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
         private void SaveResultToDatabase(string playerName, int level)
         {
             using (SQLiteConnection connection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["rating"].ConnectionString))
             {
                 connection.Open();
 
-                // Проверяем, существует ли игрок с таким именем уже в базе данных
+                // РџСЂРѕРІРµСЂСЏРµРј, СЃСѓС‰РµСЃС‚РІСѓРµС‚ Р»Рё РёРіСЂРѕРє СЃ С‚Р°РєРёРј РёРјРµРЅРµРј СѓР¶Рµ РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…
                 string selectQuery = "SELECT * FROM Rating WHERE Name = @Name";
 
                 using (SQLiteCommand selectCommand = new SQLiteCommand(selectQuery, connection))
                 {
                     selectCommand.Parameters.AddWithValue("@Name", playerName);
 
-                    // Выполняем запрос
+                    // Р’С‹РїРѕР»РЅСЏРµРј Р·Р°РїСЂРѕСЃ
                     using (SQLiteDataReader reader = selectCommand.ExecuteReader())
                     {
-                        if (reader.Read()) // Если игрок найден
+                        if (reader.Read()) // Р•СЃР»Рё РёРіСЂРѕРє РЅР°Р№РґРµРЅ
                         {
-                            // Обновляем его уровень
+                            // РћР±РЅРѕРІР»СЏРµРј РµРіРѕ СѓСЂРѕРІРµРЅСЊ
                             int existingLevel = reader.GetInt32(reader.GetOrdinal("Level"));
 
                             if (level > existingLevel)
@@ -418,7 +418,7 @@ namespace WhoWantsToBeAMillionaire
                                 }
                             }
                         }
-                        else // Если игрок не найден, добавляем новую запись
+                        else // Р•СЃР»Рё РёРіСЂРѕРє РЅРµ РЅР°Р№РґРµРЅ, РґРѕР±Р°РІР»СЏРµРј РЅРѕРІСѓСЋ Р·Р°РїРёСЃСЊ
                         {
                             string insertQuery = "INSERT INTO Rating (Name, Level) VALUES (@Name, @Level)";
 
@@ -434,30 +434,30 @@ namespace WhoWantsToBeAMillionaire
             }
         }
 
-        // Метод для загрузки топа игроков
+        // РњРµС‚РѕРґ РґР»СЏ Р·Р°РіСЂСѓР·РєРё С‚РѕРїР° РёРіСЂРѕРєРѕРІ
         private void LoadTopPlayers()
         {
             using (SQLiteConnection connection = new SQLiteConnection(ConfigurationManager.ConnectionStrings["rating"].ConnectionString))
             {
                 connection.Open();
 
-                // Создание SQL-запроса для выборки топ-10 игроков
+                // РЎРѕР·РґР°РЅРёРµ SQL-Р·Р°РїСЂРѕСЃР° РґР»СЏ РІС‹Р±РѕСЂРєРё С‚РѕРї-10 РёРіСЂРѕРєРѕРІ
                 string selectQuery = "SELECT Name, Level FROM Rating ORDER BY Level DESC LIMIT 10";
 
                 using (SQLiteCommand command = new SQLiteCommand(selectQuery, connection))
                 {
-                    // Выполнение SQL-запроса и получение результатов
+                    // Р’С‹РїРѕР»РЅРµРЅРёРµ SQL-Р·Р°РїСЂРѕСЃР° Рё РїРѕР»СѓС‡РµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
                     using (SQLiteDataReader dr = command.ExecuteReader())
                     {
                         topPlayersListBox.Items.Clear();
 
-                        // Отображение результатов на форме
+                        // РћС‚РѕР±СЂР°Р¶РµРЅРёРµ СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ РЅР° С„РѕСЂРјРµ
                         while (dr.Read())
                         {
                             string playerName = dr.GetString(0);
                             int level = dr.GetInt32(1);
 
-                            topPlayersListBox.Items.Add($"{playerName} - Уровень {level}");
+                            topPlayersListBox.Items.Add($"{playerName} - РЈСЂРѕРІРµРЅСЊ {level}");
                         }
                     }
                 }
